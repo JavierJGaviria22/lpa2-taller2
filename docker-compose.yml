@@ -1,39 +1,15 @@
 services:
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: factura-api
+    build: ./backend
     ports:
       - "8000:8000"
-    networks:
-      - factura-network
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: factura-frontend
+    build: ./frontend
     ports:
       - "3000:3000"
-    environment:
-      - BACKEND_API_URL=http://backend:8000
     depends_on:
       - backend
-    networks:
-      - factura-network
-    restart: unless-stopped
-
-networks:
-
-  factura-network:
-    driver: bridge
-
+    environment:
+      - BACKEND_URL=http://backend:8000
